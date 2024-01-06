@@ -23,7 +23,7 @@ public class ELibraryManagementSystem extends JFrame {
         books = new ArrayList<>();
 
         setTitle("E Library Management System");
-        setSize(500, 200);
+        setSize(600, 300);
         setLocationRelativeTo(null); // Center the JFrame on the screen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -47,9 +47,10 @@ public class ELibraryManagementSystem extends JFrame {
         removeButton.setFont(buttonFont);
         displayButton.setFont(buttonFont);
 
-        Color backgroundColor = new Color(240, 240, 240);
+        Color backgroundColor = new Color(173, 216, 230); // Light Sky Blue
         Color buttonColor = new Color(50, 150, 50);
         Color textColor = Color.BLACK;
+        Color titleColor = Color.BLACK; // Set the title color to black
 
         getContentPane().setBackground(backgroundColor);
         addButton.setBackground(buttonColor);
@@ -65,11 +66,12 @@ public class ELibraryManagementSystem extends JFrame {
         // Layout
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 10, 10, 10);
 
         // Title
         JLabel titleLabel = new JLabel("E Library Management System");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setForeground(titleColor); // Set the title color to black
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;
@@ -77,7 +79,7 @@ public class ELibraryManagementSystem extends JFrame {
         add(titleLabel, gbc);
 
         // Input Panel
-        JPanel inputPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+        JPanel inputPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         inputPanel.setBackground(backgroundColor);
         inputPanel.add(new JLabel("Title: ")).setFont(labelFont);
         inputPanel.add(titleTextField);
@@ -169,6 +171,7 @@ public class ELibraryManagementSystem extends JFrame {
 
         // Create and configure the JTable
         JTable table = new JTable(tableModel);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
 
         // Create and configure the JScrollPane for the JTable
         JScrollPane scrollPane = new JScrollPane(table);
