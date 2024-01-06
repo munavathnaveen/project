@@ -22,8 +22,9 @@ public class ELibraryManagementSystem extends JFrame {
     public ELibraryManagementSystem() {
         books = new ArrayList<>();
 
-        setTitle("eLibrary Management System");
-        setSize(400, 300);
+        setTitle("E Library Management System");
+        setSize(500, 400);
+        setLocationRelativeTo(null); // Center the JFrame on the screen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Components
@@ -68,8 +69,20 @@ public class ELibraryManagementSystem extends JFrame {
         displayArea.setForeground(textColor);
 
         // Layout
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
 
+        // Title
+        JLabel titleLabel = new JLabel("E Library Management System");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(titleLabel, gbc);
+
+        // Input Panel
         JPanel inputPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         inputPanel.setBackground(backgroundColor);
         inputPanel.add(new JLabel("Title: ")).setFont(labelFont);
@@ -77,17 +90,32 @@ public class ELibraryManagementSystem extends JFrame {
         inputPanel.add(new JLabel("Author: ")).setFont(labelFont);
         inputPanel.add(authorTextField);
 
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(inputPanel, gbc);
+
+        // Button Panel
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(backgroundColor);
         buttonPanel.add(addButton);
         buttonPanel.add(removeButton);
         buttonPanel.add(displayButton);
 
-        JScrollPane scrollPane = new JScrollPane(displayArea);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(buttonPanel, gbc);
 
-        add(inputPanel, BorderLayout.NORTH);
-        add(buttonPanel, BorderLayout.CENTER);
-        add(scrollPane, BorderLayout.SOUTH);
+        // Display Area
+        JScrollPane scrollPane = new JScrollPane(displayArea);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(scrollPane, gbc);
 
         // Action listeners
         addButton.addActionListener(new ActionListener() {
@@ -131,7 +159,7 @@ public class ELibraryManagementSystem extends JFrame {
         boolean removed = false;
 
         if (!titleToRemove.isEmpty()) {
-            for (Book book : books) {
+            for (Book book : new ArrayList<>(books)) {
                 if (book.title.equals(titleToRemove)) {
                     books.remove(book);
                     removed = true;
