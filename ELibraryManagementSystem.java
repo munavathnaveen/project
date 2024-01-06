@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,22 +17,19 @@ class Book {
 
 public class ELibraryManagementSystem extends JFrame {
     private JTextField titleTextField, authorTextField;
-    private JTextArea displayArea;
     private ArrayList<Book> books;
 
     public ELibraryManagementSystem() {
         books = new ArrayList<>();
 
         setTitle("E Library Management System");
-        setSize(500, 400);
+        setSize(500, 200);
         setLocationRelativeTo(null); // Center the JFrame on the screen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Components
         titleTextField = new JTextField(20);
         authorTextField = new JTextField(20);
-        displayArea = new JTextArea(10, 30);
-        displayArea.setEditable(false);
 
         JButton addButton = new JButton("Add Book");
         JButton removeButton = new JButton("Remove Book");
@@ -41,11 +39,9 @@ public class ELibraryManagementSystem extends JFrame {
         Font labelFont = new Font("Arial", Font.BOLD, 14);
         Font textFont = new Font("Arial", Font.PLAIN, 14);
         Font buttonFont = new Font("Arial", Font.BOLD, 14);
-        Font displayFont = new Font("Arial", Font.PLAIN, 12);
 
         titleTextField.setFont(textFont);
         authorTextField.setFont(textFont);
-        displayArea.setFont(displayFont);
 
         addButton.setFont(buttonFont);
         removeButton.setFont(buttonFont);
@@ -62,11 +58,9 @@ public class ELibraryManagementSystem extends JFrame {
 
         titleTextField.setBackground(Color.WHITE);
         authorTextField.setBackground(Color.WHITE);
-        displayArea.setBackground(Color.WHITE);
 
         titleTextField.setForeground(textColor);
         authorTextField.setForeground(textColor);
-        displayArea.setForeground(textColor);
 
         // Layout
         setLayout(new GridBagLayout());
@@ -109,14 +103,6 @@ public class ELibraryManagementSystem extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         add(buttonPanel, gbc);
 
-        // Display Area
-        JScrollPane scrollPane = new JScrollPane(displayArea);
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 3;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(scrollPane, gbc);
-
         // Action listeners
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -148,7 +134,7 @@ public class ELibraryManagementSystem extends JFrame {
             Book book = new Book(title, author);
             books.add(book);
             clearFields();
-            displayArea.append("Book added: " + book.title + " by " + book.author + "\n");
+            JOptionPane.showMessageDialog(this, "Book added: " + book.title + " by " + book.author, "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "Please enter both title and author.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -156,19 +142,13 @@ public class ELibraryManagementSystem extends JFrame {
 
     private void removeBook() {
         String titleToRemove = titleTextField.getText();
-        boolean removed = false;
 
         if (!titleToRemove.isEmpty()) {
-            for (Book book : new ArrayList<>(books)) {
-                if (book.title.equals(titleToRemove)) {
-                    books.remove(book);
-                    removed = true;
-                    displayArea.append("Book removed: " + book.title + " by " + book.author + "\n");
-                    break;
-                }
-            }
+            boolean removed = books.removeIf(book -> book.title.equals(titleToRemove));
 
-            if (!removed) {
+            if (removed) {
+                JOptionPane.showMessageDialog(this, "Book removed successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
                 JOptionPane.showMessageDialog(this, "Book not found.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
@@ -179,14 +159,22 @@ public class ELibraryManagementSystem extends JFrame {
     }
 
     private void displayBooks() {
-        displayArea.setText("");
-        if (books.isEmpty()) {
-            displayArea.append("No books in the library.\n");
-        } else {
-            for (Book book : books) {
-                displayArea.append("Title: " + book.title + ", Author: " + book.author + "\n");
-            }
+        // Create a table model with column names
+        DefaultTableModel tableModel = new DefaultTableModel(new String[]{"Title", "Author"}, 0);
+
+        // Add data to the table model
+        for (Book book : books) {
+            tableModel.addRow(new String[]{book.title, book.author});
         }
+
+        // Create and configure the JTable
+        JTable table = new JTable(tableModel);
+
+        // Create and configure the JScrollPane for the JTable
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        // Show the JTable in a popup dialog
+        JOptionPane.showMessageDialog(this, scrollPane, "Available Books", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void clearFields() {
